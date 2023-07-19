@@ -22,14 +22,19 @@ import useFetch from "../../hook/useFetch";
 
 const tabs = ["About", "Qualifications", "Responsibilities"];
 
+import { Share } from 'react-native';
+
+
+
+
 const JobDetails = () => {
-    const params = useSearchParams();
-    const router = useRouter();
-
-    const { data, isLoading, error, refetch } = useFetch("job-details", {
-        job_id: params.id,
-      });
-
+  const params = useSearchParams();
+  const router = useRouter();
+  
+  const { data, isLoading, error, refetch } = useFetch("job-details", {
+    job_id: params.id,
+  });
+  
       const [activeTab, setActiveTab] = useState(tabs[0]);
       const [refreshing, setRefreshing] = useState(false);
     
@@ -38,6 +43,19 @@ const JobDetails = () => {
         refetch()
         setRefreshing(false)
       }, []);
+
+
+      const shareContent = async () => {
+        try {
+          await Share.share({
+            title: 'Job',
+            message: `${ data[0].job_title}\n\n${ data[0]?.job_google_link}`,
+          });
+          console.log('Content shared successfully!');
+        } catch (error) {
+          console.log('Error sharing content:', error.message);
+        }
+      };
     
 
       const displayTabContent = () => {
@@ -84,7 +102,11 @@ const JobDetails = () => {
           />
         ),
         headerRight: () => (
-          <ScreenHeaderBtn iconUrl={icons.share} dimension='60%' />
+          <ScreenHeaderBtn
+           iconUrl={icons.share}
+            dimension='60%' 
+            handlePress={shareContent}
+            />
         ),
         headerTitle: "",
       }}
