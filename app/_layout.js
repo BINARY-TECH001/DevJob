@@ -23,4 +23,4 @@ const Layout = () =>{
     return <Stack onLayout={onLayoutRootView} />
 }
 
-export default Stack;
+export default Layout;
